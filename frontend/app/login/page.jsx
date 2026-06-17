@@ -16,7 +16,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/login/", {
+      const response = await fetch("http://127.0.0.1:8001/api/login/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -26,13 +26,19 @@ export default function LoginPage() {
           password,
         }),
       });
-
+      console.log("Status:", response.status);
       const data = await response.json();
-
+      console.log("Response:", data);
       if (response.ok) {
+        console.log("LOGIN SUCCESS");
+
         localStorage.setItem("accessToken", data.access);
 
+        console.log("TOKEN SAVED");
+
         router.push("/");
+
+        console.log("REDIRECT CALLED");
       } else {
         alert("Invalid username or password");
       }
@@ -47,7 +53,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[#f5f7fb] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        {/* Logo */}
         <div className="text-center mb-8">
           <div
             className="
