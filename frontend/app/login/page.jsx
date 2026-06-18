@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -9,7 +10,7 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const { login } = useAuth();
   const loginUser = async (e) => {
     e.preventDefault();
 
@@ -32,7 +33,7 @@ export default function LoginPage() {
       if (response.ok) {
         console.log("LOGIN SUCCESS");
 
-        localStorage.setItem("accessToken", data.access);
+        login(data.access);
 
         console.log("TOKEN SAVED");
 

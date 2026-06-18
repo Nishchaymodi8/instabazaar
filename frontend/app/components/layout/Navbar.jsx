@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
+  const { isLoggedIn, logout } = useAuth();
+
   return (
     <header className="bg-white border-b shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -10,38 +15,40 @@ export default function Navbar() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
-          <Link href="/" className="hover:text-purple-600">
-            Home
-          </Link>
-
-          <Link href="/gallery" className="hover:text-purple-600">
-            Gallery
-          </Link>
-
-          <Link href="/vendors" className="hover:text-purple-600">
-            Vendors
-          </Link>
-
-          <Link href="/about" className="hover:text-purple-600">
-            About
-          </Link>
-
-          <Link href="/reviews" className="hover:text-purple-600">
-            Reviews
-          </Link>
+          <Link href="/">Home</Link>
+          <Link href="/gallery">Gallery</Link>
+          <Link href="/vendors">Vendors</Link>
+          <Link href="/about">About</Link>
         </nav>
 
         <div className="flex gap-3">
-          <Link href="/login" className="px-4 py-2 rounded-xl border">
-            Login
-          </Link>
+          {isLoggedIn ? (
+            <>
+              <button className="w-10 h-10 rounded-full bg-purple-600 text-white">
+                👤
+              </button>
 
-          <Link
-            href="/register"
-            className="px-4 py-2 rounded-xl bg-purple-600 text-white"
-          >
-            Sign Up
-          </Link>
+              <button
+                onClick={logout}
+                className="px-4 py-2 rounded-xl border text-red-500"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/login" className="px-4 py-2 rounded-xl border">
+                Login
+              </Link>
+
+              <Link
+                href="/register"
+                className="px-4 py-2 rounded-xl bg-purple-600 text-white"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
