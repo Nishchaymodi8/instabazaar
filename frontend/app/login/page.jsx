@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import API_BASE_URL from "@/lib/api";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8001/api/login/", {
+      const response = await fetch(`${API_BASE_URL}/api/login/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -27,28 +28,26 @@ export default function LoginPage() {
           password,
         }),
       });
-      console.log("Status:", response.status);
-      const data = await response.json();
-      console.log("Response:", data);
+
+      let data = {};
+      try {
+        data = await response.json();
+      } catch {
+        data = {};
+      }
+
       if (response.ok) {
-        console.log("LOGIN SUCCESS");
-
         login(data.access);
-
-        console.log("TOKEN SAVED");
-
         router.push("/");
-
-        console.log("REDIRECT CALLED");
       } else {
-        alert("Invalid username or password");
+        alert(data.detail || data.error || "Invalid username or password");
       }
     } catch (error) {
-      console.error(error);
-      alert("Server error");
+      console.error("Login request failed:", error);
+      alert(`Unable to reach the backend server. Make sure Django is running on ${API_BASE_URL}.`);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (

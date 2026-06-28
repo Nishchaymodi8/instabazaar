@@ -1,0 +1,153 @@
+import API_BASE_URL from "@/lib/api";
+
+export const getVendorProfile = async (token) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/vendor/profile/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(response.status === 401 ? "Unauthorized" : `Error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Failed to fetch vendor profile:", error);
+    throw error;
+  }
+};
+
+export const updateVendorProfile = async (token, profileData) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/vendor/profile/update/`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(profileData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Failed to update vendor profile:", error);
+    throw error;
+  }
+};
+
+export const getVendorStats = async (token) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/vendor/stats/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(response.status === 401 ? "Unauthorized" : `Error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Failed to fetch vendor stats:", error);
+    throw error;
+  }
+};
+
+export const getVendorProducts = async (token, page = 1, pageSize = 10) => {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/api/vendor/products/?page=${page}&page_size=${pageSize}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Failed to fetch vendor products:", error);
+    throw error;
+  }
+};
+
+export const createProduct = async (token, productData) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/vendor/products/`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: productData instanceof FormData ? productData : JSON.stringify(productData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Failed to create product:", error);
+    throw error;
+  }
+};
+
+export const updateProduct = async (token, productId, productData) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/vendor/products/${productId}/`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(productData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Failed to update product:", error);
+    throw error;
+  }
+};
+
+export const deleteProduct = async (token, productId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/vendor/products/${productId}/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    return response.ok;
+  } catch (error) {
+    console.error("Failed to delete product:", error);
+    throw error;
+  }
+};

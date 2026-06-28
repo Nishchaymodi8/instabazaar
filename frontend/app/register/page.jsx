@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "../components/layout/Navbar";
+import API_BASE_URL from "@/lib/api";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8001/api/register/", {
+      const response = await fetch(`${API_BASE_URL}/api/register/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,21 +38,25 @@ export default function RegisterPage() {
         }),
       });
 
-      const data = await response.json();
+      let data = {};
+      try {
+        data = await response.json();
+      } catch {
+        data = {};
+      }
 
       if (response.ok) {
         alert("Account created successfully");
-
         router.push("/login");
       } else {
         alert(data.error || "Registration failed");
       }
     } catch (error) {
-      console.error(error);
-      alert("Server error");
+      console.error("Registration request failed:", error);
+      alert(`Unable to reach the backend server. Make sure Django is running on ${API_BASE_URL}.`);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
